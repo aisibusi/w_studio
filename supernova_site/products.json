@@ -1,0 +1,26 @@
+[
+  {
+    "id": "b1",
+    "name": "Starlight Bracelet",
+    "type": "bracelet",
+    "image": "images/bracelet1.jpg",
+    "price": "¥320 / $45",
+    "description": "Delicate handmade bracelet inspired by cosmic light. Materials: freshwater pearl, silver-plated wire."
+  },
+  {
+    "id": "n1",
+    "name": "Aurora Necklace",
+    "type": "necklace",
+    "image": "images/necklace1.jpg",
+    "price": "¥480 / $68",
+    "description": "Handcrafted necklace with shimmering crystal beads and adjustable chain."
+  },
+  {
+    "id": "p1",
+    "name": "Celestial Phone Chain",
+    "type": "phonechain",
+    "image": "images/phonechain1.jpg",
+    "price": "¥180 / $25",
+    "description": "Elegant handmade phone charm made with brass fittings and glass beads."
+  }
+]
