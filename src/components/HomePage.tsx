@@ -5,8 +5,7 @@ import { COLLECTIONS } from '../collections';
 import { getSiteSettings } from '../lib/api';
 import type { AppSettings } from '../types';
 
-const defaultHeroImage =
-  'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&q=80&w=2000';
+const defaultHeroImage = '/collections/hero-w-necklace.webp';
 
 function roman(index: number) {
   return ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'][index] || String(index + 1);
@@ -64,7 +63,7 @@ export default function HomePage() {
           <img
             src={heroImage}
             alt="w studio jewelry"
-            className="h-full w-full object-cover object-center"
+            className="h-full w-full object-cover object-center brightness-[1.08] contrast-[1.04]"
           />
         </motion.div>
 
@@ -148,10 +147,10 @@ export default function HomePage() {
                   <img
                     src={getCollectionCoverImage(collection.id, collection.coverImageUrl)}
                     alt=""
-                    className="absolute inset-0 h-full w-full object-cover opacity-65 transition-all duration-700 group-hover:scale-105 group-hover:opacity-80"
+                    className="absolute inset-0 h-full w-full object-cover opacity-90 brightness-[1.12] contrast-[1.06] saturate-[1.04] transition-all duration-700 group-hover:scale-105 group-hover:opacity-100"
                   />
                 ) : null}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/20" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
 
                 <div className="relative z-10 flex h-full min-h-[332px] flex-col justify-between">
                   <span className="font-accent text-xs font-semibold tracking-[0.3em] text-white/60">

@@ -85,7 +85,7 @@ function defaultSiteSettings(): AppSettings {
   return {
     wechatId: 'doudou-zhaowenting',
     contactMessage: 'Tell us which piece you love, and we will respond with availability, details, and styling notes.',
-    homeHeroImageUrl: 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&q=80&w=2000',
+    homeHeroImageUrl: '/collections/hero-w-necklace.webp',
     collectionOrder: COLLECTIONS.map((collection) => collection.id),
     collectionImageUrls: {},
   };

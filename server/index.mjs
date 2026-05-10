@@ -18,17 +18,16 @@ const port = Number(process.env.PORT || 3000);
 const adminPassword = process.env.ADMIN_PASSWORD || '666';
 const sessionSecret = process.env.SESSION_SECRET || adminPassword;
 const sessionMaxAgeMs = 7 * 24 * 60 * 60 * 1000;
-const defaultHomeHeroImageUrl =
-  'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&q=80&w=2000';
+const defaultHomeHeroImageUrl = '/collections/hero-w-necklace.webp';
 const defaultCollectionOrder = [
   'supernova',
   'collection-2',
-  'collection-3',
-  'collection-4',
   'collection-5',
-  'collection-6',
+  'collection-4',
+  'collection-3',
   'collection-7',
   'collection-8',
+  'collection-6',
 ];
 const defaultSettings = {
   wechatId: 'doudou-zhaowenting',

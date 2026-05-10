@@ -19,8 +19,8 @@ export const COLLECTIONS: CollectionConfig[] = [
     shortName: 'SUPERNOVA',
     tagline: 'Light in Motion',
     description:
-      'Born from the depths of water and time, each pearl carries an organic radiance shaped by nature. Handcrafted into fluid forms, Nova Lumina captures the quiet brilliance of light in motion - subtle, rare, and eternally evolving.',
-    coverImageUrl: '/hero.png?v=collection-cover',
+      'Born from the depths of water and time, each pearl carries an organic radiance shaped by nature. Handcrafted into fluid forms, Supernova captures the quiet brilliance of light in motion - subtle, rare, and eternally evolving.',
+    coverImageUrl: '/collections/supernova.webp',
     theme: 'dark',
   },
   {
@@ -31,29 +31,7 @@ export const COLLECTIONS: CollectionConfig[] = [
     tagline: 'Pure Light, Eternal Form',
     description:
       'A study of light at its purest form. Through precise cuts and restrained design, diamonds reveal their eternal geometry - brilliance distilled into clarity, strength, and permanence.',
-    coverImageUrl: '/collections/eterna-prism.jpeg',
-    theme: 'light',
-  },
-  {
-    id: 'collection-3',
-    name: 'ZODIAC ORBIT',
-    slug: 'zodiac-orbit',
-    shortName: 'ZODIAC ORBIT',
-    tagline: 'Symbols of the Cosmos',
-    description:
-      'Inspired by celestial patterns and symbolic systems across cultures, this collection explores identity through the language of the cosmos. Each piece serves as a personal emblem - a reflection of destiny, rhythm, and alignment.',
-    coverImageUrl: '/collections/zodiac-orbit.png',
-    theme: 'light',
-  },
-  {
-    id: 'collection-4',
-    name: 'DAO ORIGINS',
-    slug: 'dao-origins',
-    shortName: 'DAO ORIGINS',
-    tagline: 'The Flow of All Things',
-    description:
-      'Rooted in the philosophy of Dao, this collection reflects the unseen force that flows through all things. Natural jade and elemental materials are shaped with restraint, honoring balance, movement, and becoming.',
-    coverImageUrl: '/collections/dao-origins.jpeg',
+    coverImageUrl: '/collections/eterna-prism.webp',
     theme: 'light',
   },
   {
@@ -64,18 +42,29 @@ export const COLLECTIONS: CollectionConfig[] = [
     tagline: 'One and Only',
     description:
       'An intimate creation process where each piece begins with a singular vision. Designed and crafted exclusively, every work is a convergence of personal narrative, material, and form - irreproducible, and entirely its own.',
-    coverImageUrl: '/collections/singularity-atelier.jpeg',
+    coverImageUrl: '/collections/singularity-atelier.webp',
     theme: 'light',
   },
   {
-    id: 'collection-6',
-    name: 'ATELIER HERITAGE',
-    slug: 'atelier-heritage',
-    shortName: 'ATELIER HERITAGE',
-    tagline: 'Crafted Through Time',
+    id: 'collection-4',
+    name: 'DAO ORIGINS',
+    slug: 'dao-origins',
+    shortName: 'DAO ORIGINS',
+    tagline: 'The Flow of All Things',
     description:
-      'A tribute to time-honored craftsmanship, where traditional techniques are preserved and reinterpreted. Each piece carries the imprint of human touch, memory, and cultural continuity - a quiet luxury shaped across generations.',
-    coverImageUrl: '/collections/atelier-heritage.jpeg',
+      'Rooted in the philosophy of Dao, this collection reflects the unseen force that flows through all things. Natural jade and elemental materials are shaped with restraint, honoring balance, movement, and becoming.',
+    coverImageUrl: '/collections/dao-origins.webp',
+    theme: 'light',
+  },
+  {
+    id: 'collection-3',
+    name: 'ZODIAC ORBIT',
+    slug: 'zodiac-orbit',
+    shortName: 'ZODIAC ORBIT',
+    tagline: 'Symbols of the Cosmos',
+    description:
+      'Inspired by celestial patterns and symbolic systems across cultures, this collection explores identity through the language of the cosmos. Each piece serves as a personal emblem - a reflection of destiny, rhythm, and alignment.',
+    coverImageUrl: '/collections/zodiac-orbit.webp',
     theme: 'light',
   },
   {
@@ -86,7 +75,7 @@ export const COLLECTIONS: CollectionConfig[] = [
     tagline: 'Woven Connections',
     description:
       'Threads intertwine as a metaphor for connection, time, and continuity. Handwoven with precision and intuition, each piece reflects the invisible ties that shape our lives.',
-    coverImageUrl: '/collections/woven-soul.png',
+    coverImageUrl: '/collections/woven-soul.webp',
     theme: 'light',
   },
   {
@@ -97,7 +86,18 @@ export const COLLECTIONS: CollectionConfig[] = [
     tagline: 'Refined Everyday Objects',
     description:
       'Everyday objects, reimagined through a lens of refinement. These pieces extend the language of jewelry into daily rituals - subtle accents that move with you, carrying intention in motion.',
-    coverImageUrl: '/collections/luxe-accessories.jpeg',
+    coverImageUrl: '/collections/luxe-accessories.webp',
+    theme: 'light',
+  },
+  {
+    id: 'collection-6',
+    name: 'ATELIER HERITAGE',
+    slug: 'atelier-heritage',
+    shortName: 'ATELIER HERITAGE',
+    tagline: 'Crafted Through Time',
+    description:
+      'A tribute to time-honored craftsmanship, where traditional techniques are preserved and reinterpreted. Each piece carries the imprint of human touch, memory, and cultural continuity - a quiet luxury shaped across generations.',
+    coverImageUrl: '/collections/atelier-heritage.webp',
     theme: 'light',
   },
 ];
