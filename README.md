@@ -1,6 +1,6 @@
 # w studio
 
-A quiet luxury jewelry storefront for the Supernova collection.
+A quiet luxury jewelry storefront for w studio collections.
 
 The project uses a React storefront and a separate Express admin panel. Product data, inquiries, and uploaded product images are stored on disk so the app can run with a Railway Volume instead of Firebase.
 
@@ -13,6 +13,7 @@ The project uses a React storefront and a separate Express admin panel. Product 
 - Product detail modal with description, price, and inquiry action
 - Customer inquiry form for contact details and questions
 - Admin product create, edit, delete, and image upload
+- Admin homepage hero image upload, category cover image upload, and category order controls
 - USD pricing and `Inquire for pricing` support
 - File-based storage through `DATA_DIR`
 - Railway Volume ready
@@ -202,8 +203,9 @@ The `/admin` dashboard now includes a `Homepage` tab.
 From this tab, the site owner can:
 
 - Upload the main homepage hero photo. This image appears at the very top of `/`, behind the “Formed by Nature. Refined by Time.” headline.
+- Upload or reset each collection/category cover image. These images appear on the homepage collection cards.
 - Drag collection/category rows to change the order of the homepage collection cards.
 - Use the up/down buttons as an alternative to drag-and-drop.
-- Click `Save Homepage Changes` to publish the updated homepage photo and collection order.
+- Click `Save Homepage Changes` to publish the updated homepage photo, category cover images, and collection order.
 
 These settings are stored in `site-settings.json` under `DATA_DIR`, so Railway production should keep `DATA_DIR=/data` and mount a Railway Volume at `/data`.

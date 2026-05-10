@@ -87,6 +87,7 @@ function defaultSiteSettings(): AppSettings {
     contactMessage: 'Tell us which piece you love, and we will respond with availability, details, and styling notes.',
     homeHeroImageUrl: 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&q=80&w=2000',
     collectionOrder: COLLECTIONS.map((collection) => collection.id),
+    collectionImageUrls: {},
   };
 }
 
@@ -96,6 +97,21 @@ function normalizeCollectionOrder(order?: string[]) {
     (id, index) => COLLECTIONS.some((collection) => collection.id === id) && submitted.indexOf(id) === index,
   );
   return [...uniqueValid, ...COLLECTIONS.map((collection) => collection.id).filter((id) => !uniqueValid.includes(id))];
+}
+
+function normalizeCollectionImageUrls(value?: Record<string, string>) {
+  const submitted = value && typeof value === 'object' ? value : {};
+  return COLLECTIONS.reduce<Record<string, string>>((accumulator, collection) => {
+    const imageUrl = String(submitted[collection.id] || '').trim();
+    if (imageUrl) {
+      accumulator[collection.id] = imageUrl;
+    }
+    return accumulator;
+  }, {});
+}
+
+function getCollectionCoverPreview(collectionId: string, settings: AppSettings) {
+  return settings.collectionImageUrls?.[collectionId] || getCollectionById(collectionId).coverImageUrl || '';
 }
 
 export default function AdminPage() {
@@ -111,6 +127,7 @@ export default function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [uploadingHeroImage, setUploadingHeroImage] = useState(false);
+  const [uploadingCollectionImageId, setUploadingCollectionImageId] = useState<string | null>(null);
   const [savingHomepage, setSavingHomepage] = useState(false);
   const [draggingCollectionId, setDraggingCollectionId] = useState<string | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
@@ -146,7 +163,11 @@ export default function AdminPage() {
       ]);
       setProducts(nextProducts);
       setInquiries(nextInquiries);
-      setSiteSettings({ ...nextSettings, collectionOrder: normalizeCollectionOrder(nextSettings.collectionOrder) });
+      setSiteSettings({
+        ...nextSettings,
+        collectionOrder: normalizeCollectionOrder(nextSettings.collectionOrder),
+        collectionImageUrls: normalizeCollectionImageUrls(nextSettings.collectionImageUrls),
+      });
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Unable to load dashboard.');
     } finally {
@@ -368,6 +389,42 @@ export default function AdminPage() {
     }
   }
 
+  async function handleCollectionImageFile(collectionId: string, file?: File) {
+    if (!file) {
+      return;
+    }
+
+    const collection = getCollectionById(collectionId);
+    setUploadingCollectionImageId(collectionId);
+    setMessage('');
+
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      const uploaded = await uploadImage(dataUrl);
+      setSiteSettings((current) => ({
+        ...current,
+        collectionImageUrls: {
+          ...normalizeCollectionImageUrls(current.collectionImageUrls),
+          [collectionId]: uploaded.imageUrl,
+        },
+      }));
+      setMessage(`${collection.name} category cover image uploaded. Click Save Homepage Changes to publish it on the homepage collection card.`);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Unable to upload category image.');
+    } finally {
+      setUploadingCollectionImageId(null);
+    }
+  }
+
+  function resetCollectionImage(collectionId: string) {
+    setSiteSettings((current) => {
+      const nextImages = normalizeCollectionImageUrls(current.collectionImageUrls);
+      delete nextImages[collectionId];
+      return { ...current, collectionImageUrls: nextImages };
+    });
+    setMessage('Category cover reset to the original built-in image. Click Save Homepage Changes to publish it.');
+  }
+
   function moveCollection(sourceId: string, targetId: string) {
     if (sourceId === targetId) {
       return;
@@ -410,9 +467,14 @@ export default function AdminPage() {
       const saved = await updateSiteSettings({
         homeHeroImageUrl: siteSettings.homeHeroImageUrl,
         collectionOrder: normalizeCollectionOrder(siteSettings.collectionOrder),
+        collectionImageUrls: normalizeCollectionImageUrls(siteSettings.collectionImageUrls),
       });
-      setSiteSettings({ ...saved, collectionOrder: normalizeCollectionOrder(saved.collectionOrder) });
-      setMessage('Homepage updated. The main photo and collection order are now live.');
+      setSiteSettings({
+        ...saved,
+        collectionOrder: normalizeCollectionOrder(saved.collectionOrder),
+        collectionImageUrls: normalizeCollectionImageUrls(saved.collectionImageUrls),
+      });
+      setMessage('Homepage updated. The main photo, category cover images, and collection order are now live.');
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Unable to save homepage changes.');
     } finally {
@@ -677,13 +739,13 @@ export default function AdminPage() {
                   Homepage Controls
                 </h2>
                 <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-500">
-                  Upload the main homepage photo and drag collection/category cards into the order you want visitors to see.
+                  Upload the main homepage photo, change each collection/category cover image, and drag collection/category cards into the order you want visitors to see.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => void handleSaveHomepage()}
-                disabled={savingHomepage || uploadingHeroImage}
+                disabled={savingHomepage || uploadingHeroImage || Boolean(uploadingCollectionImageId)}
                 className="flex w-fit items-center gap-3 bg-[#C5A059] px-6 py-3 font-sans text-[10px] font-bold uppercase tracking-widest text-white transition-all hover:bg-[#1A1A1A] disabled:opacity-60"
               >
                 <Save size={14} />
@@ -734,13 +796,13 @@ export default function AdminPage() {
               <section className="border border-[#E5E2DE] bg-white p-6 shadow-sm md:p-8">
                 <div className="mb-6 flex items-center justify-between gap-4">
                   <div>
-                    <h3 className="font-display text-2xl font-light text-[#1A1A1A]">Collection / Category Order</h3>
+                    <h3 className="font-display text-2xl font-light text-[#1A1A1A]">Collection / Category Cards</h3>
                     <p className="mt-2 text-xs leading-6 text-gray-500">
-                      Drag each row to reorder the homepage collection cards. The first row appears first on the homepage.
+                      Drag each row to reorder homepage cards, and upload a separate cover image for each category card.
                     </p>
                   </div>
                   <span className="font-sans text-[9px] font-bold uppercase tracking-[0.24em] text-[#C5A059]">
-                    Drag to reorder
+                    Drag + upload covers
                   </span>
                 </div>
 
@@ -768,14 +830,43 @@ export default function AdminPage() {
                         {index + 1}
                       </div>
                       <GripVertical className="shrink-0 text-[#1A1A1A]/30" size={18} />
-                      <div className="h-14 w-14 shrink-0 overflow-hidden bg-zinc-100">
-                        {collection.coverImageUrl ? <img src={collection.coverImageUrl} alt="" className="h-full w-full object-cover" /> : null}
+                      <div className="h-16 w-16 shrink-0 overflow-hidden bg-zinc-100">
+                        {getCollectionCoverPreview(collection.id, siteSettings) ? (
+                          <img
+                            src={getCollectionCoverPreview(collection.id, siteSettings)}
+                            alt=""
+                            className="h-full w-full object-cover"
+                          />
+                        ) : null}
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-semibold text-[#1A1A1A]">{collection.name}</p>
                         <p className="truncate text-xs text-gray-400">/{collection.slug} · {collection.tagline}</p>
+                        <p className="mt-1 text-[11px] leading-5 text-gray-400">
+                          This cover appears on the homepage collection/category card. Product images are managed separately in Pieces.
+                        </p>
                       </div>
-                      <div className="flex shrink-0 gap-2">
+                      <div className="flex shrink-0 flex-col gap-2 md:flex-row">
+                        <label className="flex cursor-pointer items-center justify-center gap-2 border border-[#E5E2DE] px-3 py-2 font-sans text-[9px] font-bold uppercase tracking-widest text-[#1A1A1A]/55 transition-colors hover:border-[#C5A059] hover:text-[#C5A059]">
+                          <Upload size={13} />
+                          {uploadingCollectionImageId === collection.id ? 'Uploading' : 'Cover'}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="sr-only"
+                            onChange={(event) => void handleCollectionImageFile(collection.id, event.target.files?.[0])}
+                          />
+                        </label>
+                        {siteSettings.collectionImageUrls?.[collection.id] ? (
+                          <button
+                            type="button"
+                            onClick={() => resetCollectionImage(collection.id)}
+                            className="border border-[#E5E2DE] px-3 py-2 text-xs text-[#1A1A1A]/50 transition-colors hover:border-[#C5A059] hover:text-[#C5A059]"
+                            title="Reset to built-in cover"
+                          >
+                            Reset
+                          </button>
+                        ) : null}
                         <button
                           type="button"
                           onClick={() => moveCollectionByStep(collection.id, -1)}

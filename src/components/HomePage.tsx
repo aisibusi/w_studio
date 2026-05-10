@@ -47,6 +47,10 @@ export default function HomePage() {
   const heroImage = settings?.homeHeroImageUrl || defaultHeroImage;
   const collections = useMemo(() => orderCollections(settings?.collectionOrder), [settings?.collectionOrder]);
 
+  function getCollectionCoverImage(collectionId: string, fallback?: string) {
+    return settings?.collectionImageUrls?.[collectionId] || fallback;
+  }
+
   return (
     <main className="min-h-screen bg-white text-[#1A1A1A]">
       <section className="relative min-h-[100svh] overflow-hidden bg-[#0F0F0F] pt-20">
@@ -140,9 +144,9 @@ export default function HomePage() {
                 transition={{ delay: index * 0.05, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                 className="group relative min-h-[380px] overflow-hidden border border-[#E5E2DE] bg-[#111] p-6 text-white shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-xl"
               >
-                {collection.coverImageUrl ? (
+                {getCollectionCoverImage(collection.id, collection.coverImageUrl) ? (
                   <img
-                    src={collection.coverImageUrl}
+                    src={getCollectionCoverImage(collection.id, collection.coverImageUrl)}
                     alt=""
                     className="absolute inset-0 h-full w-full object-cover opacity-65 transition-all duration-700 group-hover:scale-105 group-hover:opacity-80"
                   />

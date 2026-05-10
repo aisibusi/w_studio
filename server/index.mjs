@@ -35,6 +35,7 @@ const defaultSettings = {
   contactMessage: 'Tell us which piece you love, and we will respond with availability, details, and styling notes.',
   homeHeroImageUrl: defaultHomeHeroImageUrl,
   collectionOrder: defaultCollectionOrder,
+  collectionImageUrls: {},
 };
 
 const app = express();
@@ -89,6 +90,17 @@ function normalizeCollectionOrder(value) {
   return [...uniqueValid, ...defaultCollectionOrder.filter((id) => !uniqueValid.includes(id))];
 }
 
+function normalizeCollectionImageUrls(value) {
+  const submitted = value && typeof value === 'object' ? value : {};
+  return defaultCollectionOrder.reduce((accumulator, collectionId) => {
+    const imageUrl = String(submitted[collectionId] || '').trim();
+    if (imageUrl) {
+      accumulator[collectionId] = imageUrl.slice(0, 2000);
+    }
+    return accumulator;
+  }, {});
+}
+
 function normalizeSettings(value = {}) {
   const homeHeroImageUrl = String(value.homeHeroImageUrl || defaultSettings.homeHeroImageUrl).trim();
   const wechatId = String(value.wechatId || defaultSettings.wechatId).trim();
@@ -99,6 +111,7 @@ function normalizeSettings(value = {}) {
     contactMessage: contactMessage.slice(0, 500),
     homeHeroImageUrl: homeHeroImageUrl || defaultSettings.homeHeroImageUrl,
     collectionOrder: normalizeCollectionOrder(value.collectionOrder),
+    collectionImageUrls: normalizeCollectionImageUrls(value.collectionImageUrls),
   };
 }
 
@@ -262,6 +275,17 @@ function isImageUsedByProducts(products, imageUrl, exceptProductId = null) {
   }
 
   return products.some((product) => product.id !== exceptProductId && product.imageUrl === imageUrl);
+}
+
+function isImageUsedBySettings(settings, imageUrl) {
+  if (!imageUrl) {
+    return false;
+  }
+
+  return (
+    settings.homeHeroImageUrl === imageUrl ||
+    Object.values(settings.collectionImageUrls || {}).some((value) => value === imageUrl)
+  );
 }
 
 async function deleteUploadedImageFile(imageUrl) {
@@ -446,10 +470,10 @@ app.delete('/api/uploads', requireAdmin, async (req, res, next) => {
       return;
     }
 
-    const products = await readProducts();
+    const [products, settings] = await Promise.all([readProducts(), readSettings()]);
 
-    if (isImageUsedByProducts(products, imageUrl)) {
-      res.status(409).json({ error: 'Image is still used by a product.' });
+    if (isImageUsedByProducts(products, imageUrl) || isImageUsedBySettings(settings, imageUrl)) {
+      res.status(409).json({ error: 'Image is still used on the website.' });
       return;
     }
 

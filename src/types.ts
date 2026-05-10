@@ -40,4 +40,5 @@ export interface AppSettings {
   contactMessage: string;
   homeHeroImageUrl: string;
   collectionOrder: string[];
+  collectionImageUrls: Record<string, string>;
 }
